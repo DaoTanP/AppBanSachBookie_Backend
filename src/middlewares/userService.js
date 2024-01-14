@@ -5,7 +5,7 @@ async function userExists(req, res, next) {
         const result = await UserModel.exists({ username: req.body.username });
 
         if (result)
-            res.status(400).json({ message: 'User already exists' });
+            res.status(400).json({ message: 'Username ' + req.body.username + ' already exists' });
 
         next();
     } catch (e) {
@@ -14,4 +14,32 @@ async function userExists(req, res, next) {
     }
 }
 
-module.exports = { userExists };
+async function getUserById(req, res, next) {
+    let user;
+    try {
+        user = await UserModel.findById(req.params.id || req.body.id || req.id);
+        if (!user)
+            return res.status(404).json({ message: 'user not found!' });
+
+        req.user = user;
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+    next();
+}
+
+async function getUserByUsername(req, res, next) {
+    try {
+        const result = await UserModel.find({ username: req.params.username || req.username });
+
+        if (!result)
+            return res.status(404).json({ message: 'user not found!' });
+
+        req.user = result[0];
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+    next();
+}
+
+module.exports = { userExists, getUserById, getUserByUsername };

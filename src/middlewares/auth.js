@@ -4,8 +4,8 @@ const dotenv = require('dotenv');
 // get config vars
 dotenv.config();
 
-// expires in 300 seconds
-function generateToken(username, expiresIn = 300) {
+// expires in 3600 seconds
+function generateToken(username, expiresIn = 3600) {
     return jwt.sign({ username: username }, process.env.SERVER_TOKEN, { expiresIn: expiresIn });
 }
 
@@ -17,14 +17,14 @@ function verifyToken(req, res, next) {
     if (token == null)
         return res.sendStatus(401);
 
-    jwt.verify(token, process.env.SERVER_TOKEN, (err, username) => {
+    jwt.verify(token, process.env.SERVER_TOKEN, (err, tokenData) => {
 
         if (err) {
             console.log(err.message);
             return res.sendStatus(403);
         }
 
-        req.username = username;
+        req.username = tokenData.username;
         next();
     });
 }

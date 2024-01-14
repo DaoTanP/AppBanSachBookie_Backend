@@ -6,20 +6,20 @@ router.route('/')
     .get(async (req, res) => {
         try {
             const title = req.query.title;
-            const category = req.query.category;
+            const category = (typeof req.query.category === 'string') ? [req.query.category] : req.query.category;
             const author = req.query.author;
             let query = {};
             if (title)
                 query.title = new RegExp(title, 'i');
             if (category)
-                query.category = new RegExp(category, 'i');
+                query.category = { $in: category.map(c => new RegExp(c, 'i')) };
             if (author)
                 query.author = new RegExp(author, 'i');
 
             if (Object.keys(query).length === 0)
                 query = undefined;
 
-            const results = await aggregate(query);
+            const results = await BookModel.find(query).sort();
             res.json(results);
         } catch (e) {
             res.status(500).send({ message: e.message });
@@ -34,7 +34,7 @@ router.route('/')
             publishDate: req.body.publishDate,
             overview: req.body.overview,
             numberOfPages: req.body.numberOfPages,
-            imageUrls: req.body.imageUrLs
+            images: req.body.images
         });
         try {
             const newBook = await book.save();
@@ -43,6 +43,21 @@ router.route('/')
             res.status(400).json({ message: error.message })
         }
     });
+
+router.get('/category', async (req, res) => {
+    try {
+        let result = [];
+        const f = await BookModel.find().select({ "category": 1, "_id": 0 });
+        f.forEach((obj) => {
+            result = result.concat(obj.category.filter(c =>
+                result.indexOf(c) === -1)
+            );
+        });
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 router.route('/:id')
     .get(getBookById, (req, res) => {

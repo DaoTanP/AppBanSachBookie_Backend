@@ -14,12 +14,14 @@ app.use(cors({
     methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH', 'OPTIONS']
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: "200mb" }));
+app.use(express.urlencoded({ extended: true, limit: "200mb" }));
+app.use('/public', express.static("public"));
 
-const bookRouter = require('./src/routes/books');
-app.use('/books', bookRouter);
-const userRouter = require('./src/routes/users');
-app.use('/users', userRouter);
+const bookRouter = require('./src/routes/book');
+app.use('/book', bookRouter);
+const userRouter = require('./src/routes/user');
+app.use('/user', userRouter);
 
 app.get('/', (req, res) => {
     res.send('API for Bookie');

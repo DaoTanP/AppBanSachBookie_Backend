@@ -55,6 +55,16 @@ router.route('/')
         }
     });
 
+router.post('/insertMany', async (req, res) => {
+    try {
+        const data = req.body.data;
+        const result = await BookModel.insertMany(data);
+        res.status(200).json({ message: result });
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+});
+
 router.get('/category', async (req, res) => {
     try {
         let result = [];
@@ -72,6 +82,8 @@ router.get('/category', async (req, res) => {
 
 router.route('/:id')
     .get(getBookById, (req, res) => {
+        if (res.book.images)
+            res.book.images = res.book.images.map(image => req.protocol + "://" + req.hostname + ':3000/public/images/book/' + image);
         res.json(res.book);
     })
     .patch(getBookById, async (req, res) => {

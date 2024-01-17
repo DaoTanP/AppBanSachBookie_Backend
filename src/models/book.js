@@ -14,7 +14,7 @@ const bookSchema = new mongoose.Schema({
         required: true
     },
     publisher: {
-        type: [String],
+        type: String,
         required: true
     },
     publishDate: {
@@ -31,7 +31,10 @@ const bookSchema = new mongoose.Schema({
     },
     price: {
         type: Number,
-    }
+    },
+    stock: {
+        type: Number,
+    },
 });
 
 const model = mongoose.model('Book', bookSchema, 'books');

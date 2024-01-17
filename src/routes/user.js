@@ -144,9 +144,10 @@ router.post('/removeFavorite', async (req, res) => {
 router.post('/isFavorite', async (req, res) => {
     try {
         const user = req.user;
-        if (!user.favorite || user.favorite.indexOf(req.body.bookId) === -1)
+        if (!user.favorite || user.favorite.indexOf(req.body.bookId) === -1) {
             res.send(false);
-
+            return;
+        }
         res.send(true);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -155,8 +156,16 @@ router.post('/isFavorite', async (req, res) => {
 
 router.get('/favorite', async (req, res) => {
     try {
-        const user = req.user;
-        res.status(200).json(user.favorite);
+        const favoriteBookIds = req.user.favorite;
+        const favoriteBooks = [];
+        await Promise.all(favoriteBookIds.map(async id => {
+            const book = await BookModel.findById(id);
+            favoriteBooks.push(book);
+        }));
+        favoriteBooks.forEach(book => {
+            book.images = book.images.map(image => req.protocol + "://" + req.hostname + ':3000/public/images/book/' + image);
+        });
+        res.json(favoriteBooks);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
     "username": "daotanp",
-    "password": "123123123"
+    "password": "12121212"
 }
 
 ###
@@ -992,12 +992,12 @@ GET http://localhost:3000/book/category
 
 ###
 
-GET http://localhost:3000/book?publishedFrom=2000&publishedTo=2001
+GET http://localhost:3000/book?title=kill
 
 ###
 
 GET http://localhost:3000/user/favorite
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MTYzMzksImV4cCI6MTcwNTQxOTkzOX0.2E9enNQmxX6mAyJCkLU8ro400Jdw-rAkKNnfTAfvcRY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU1MDc1NTUsImV4cCI6MTcwNTUxMTE1NX0.pkYeSx4HeeXGLlHpapC4i82NsmONisyeOItpKSMe0FQ
 
 ###
 

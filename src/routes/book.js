@@ -13,7 +13,7 @@ router.route('/')
             const publishedTo = req.query.publishedTo;
             let query = {};
             if (title)
-                query.title = { $in: title.map(q => new RegExp(q, 'i')) };
+                query.title = new RegExp(title, 'i');
             if (category)
                 query.category = { $in: category.map(q => new RegExp(q, 'i')) };
             if (author)

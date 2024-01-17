@@ -110,8 +110,10 @@ router.post('/addFavorite', async (req, res) => {
     try {
         const user = req.user;
         const book = await BookModel.findById(req.body.bookId);
-        if (!book)
+        if (!book) {
             res.status(404).json({ message: 'Book not found' });
+            return;
+        }
 
         if (user.favorite.indexOf(req.body.bookId) === -1)
             user.favorite.push(req.body.bookId);
@@ -166,6 +168,73 @@ router.get('/favorite', async (req, res) => {
             book.images = book.images.map(image => req.protocol + "://" + req.hostname + ':3000/public/images/book/' + image);
         });
         res.json(favoriteBooks);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.post('/addToCart', async (req, res) => {
+    try {
+        const user = req.user;
+        const book = await BookModel.findById(req.body.bookId);
+        if (!book) {
+            res.status(404).json({ message: 'Book not found' });
+            return;
+        }
+
+        if (user.cart.indexOf(req.body.bookId) === -1)
+            user.cart.push(req.body.bookId);
+
+        user.save();
+
+        res.status(200).json({ message: 'Added to cart' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.post('/removeFromCart', async (req, res) => {
+    try {
+        const user = req.user;
+        if (user.cart.length < 1 || user.cart.indexOf(req.body.bookId) === -1) {
+            res.status(400).json({ message: 'Book has not been added to cart' });
+            return;
+        }
+
+        user.cart.splice(user.cart.indexOf(req.body.bookId), 1);
+        user.save();
+
+        res.status(200).json({ message: 'Removed from cart' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.post('/isInCart', async (req, res) => {
+    try {
+        const user = req.user;
+        if (!user.cart || user.cart.indexOf(req.body.bookId) === -1) {
+            res.send(false);
+            return;
+        }
+        res.send(true);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.get('/cart', async (req, res) => {
+    try {
+        const cartBookIds = req.user.cart;
+        const cartBooks = [];
+        await Promise.all(cartBookIds.map(async id => {
+            const book = await BookModel.findById(id);
+            cartBooks.push(book);
+        }));
+        cartBooks.forEach(book => {
+            book.images = book.images.map(image => req.protocol + "://" + req.hostname + ':3000/public/images/book/' + image);
+        });
+        res.json(cartBooks);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

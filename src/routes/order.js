@@ -9,24 +9,24 @@ const { verifyToken } = require('../middlewares/authService');
 router.use(verifyToken);
 router.use(getUserByUsername);
 
-router.post('/', async (req, res) => {
-    const productId = req.body.productId;
+router.get('/', async (req, res) => {
+    const productIds = req.user.cart;
     let totalPrice = 0;
     let quantity = 0;
 
 
-    if (!productId || productId.constructor !== Array || productId.length === 0)
+    if (!productIds || productIds.constructor !== Array || productIds.length === 0)
         res.status(400).json({ message: 'error processing product' });
 
     try {
-        await Promise.all(productId.map(async id => {
+        await Promise.all(productIds.map(async id => {
             const product = await BookModel.findById(id);
             totalPrice += product.price;
             quantity++;
         }));
 
         const order = new OrderModel({
-            productId: productId,
+            productId: productIds,
             quantity: quantity,
             total: totalPrice,
             createdAt: Date.now(),
@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
         const user = req.user;
         user.order.push(newOrder._id);
         user.save();
-        res.status(200).json(newOrder);
+        res.json(newOrder);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

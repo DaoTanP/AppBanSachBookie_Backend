@@ -10,7 +10,7 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3000/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MTYzMzksImV4cCI6MTcwNTQxOTkzOX0.2E9enNQmxX6mAyJCkLU8ro400Jdw-rAkKNnfTAfvcRY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU1MTMyNTksImV4cCI6MTcwNTUxNjg1OX0.bS5z1RPdLyEL8TpbhSlB5mCVZUPgTNwDhREPH2NlYos
 
 ###
 
@@ -997,7 +997,7 @@ GET http://localhost:3000/book?title=kill
 ###
 
 GET http://localhost:3000/user/favorite
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU1MDc1NTUsImV4cCI6MTcwNTUxMTE1NX0.pkYeSx4HeeXGLlHpapC4i82NsmONisyeOItpKSMe0FQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU1MTMyNTksImV4cCI6MTcwNTUxNjg1OX0.bS5z1RPdLyEL8TpbhSlB5mCVZUPgTNwDhREPH2NlYos
 
 ###
 
@@ -1021,12 +1021,46 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/order
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MjA0MjIsImV4cCI6MTcwNTQyNDAyMn0.MpDhFmL9KVcFw0MmN-4rL4i1r_ebUKI2xLD0S2-8Y4k
+GET http://localhost:3000/user/cart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU1MTMyNTksImV4cCI6MTcwNTUxNjg1OX0.bS5z1RPdLyEL8TpbhSlB5mCVZUPgTNwDhREPH2NlYos
+
+###
+
+POST http://localhost:3000/user/addToCart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU1MTMyNTksImV4cCI6MTcwNTUxNjg1OX0.bS5z1RPdLyEL8TpbhSlB5mCVZUPgTNwDhREPH2NlYos
 Content-Type: application/json
 
 {
-    "productId": [
-        "65a6999b0047deb0d606d0fc"
-    ]
+    "bookId": "65a7e9d0aaf3bcf9bbf0a700"
 }
+
+###
+
+POST http://localhost:3000/user/isInCart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU1MTMyNTksImV4cCI6MTcwNTUxNjg1OX0.bS5z1RPdLyEL8TpbhSlB5mCVZUPgTNwDhREPH2NlYos
+Content-Type: application/json
+
+{
+    "bookId": "65a7e9d0aaf3bcf9bbf0a700"
+}
+
+###
+
+GET  http://localhost:3000/user/cart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU1MTMyNTksImV4cCI6MTcwNTUxNjg1OX0.bS5z1RPdLyEL8TpbhSlB5mCVZUPgTNwDhREPH2NlYos
+
+###
+
+POST http://localhost:3000/user/removeFromCart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU1MTMyNTksImV4cCI6MTcwNTUxNjg1OX0.bS5z1RPdLyEL8TpbhSlB5mCVZUPgTNwDhREPH2NlYos
+Content-Type: application/json
+
+{
+    "bookId": "65a7e9d0aaf3bcf9bbf0a700"
+}
+
+###
+
+GET http://localhost:3000/order
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MjA0MjIsImV4cCI6MTcwNTQyNDAyMn0.MpDhFmL9KVcFw0MmN-4rL4i1r_ebUKI2xLD0S2-8Y4k
+Content-Type: application/json

@@ -55,6 +55,26 @@ router.route('/')
         }
     });
 
+router.get('/random', async (req, res) => {
+    const numberOfBooks = req.query.n;
+    if (!numberOfBooks) {
+        res.status(400).send({ message: 'invalid number of books' });
+        return;
+    }
+
+    try {
+        const randomBooks = await BookModel.aggregate([
+            { $sample: { size: parseInt(numberOfBooks) } }
+        ]);
+        randomBooks.forEach(book => {
+            book.images = book.images.map(image => req.protocol + "://" + req.hostname + ':3000/public/images/book/' + image);
+        });
+        res.json(randomBooks);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 router.post('/insertMany', async (req, res) => {
     try {
         const data = req.body.data;

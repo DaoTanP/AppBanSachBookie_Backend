@@ -28,6 +28,10 @@ GET http://localhost:3000/book
 
 ###
 
+GET http://localhost:3000/book/random?n=5
+
+###
+
 POST http://localhost:3000/book/insertMany
 Content-Type: application/json
 

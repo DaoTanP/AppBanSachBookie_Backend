@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const UserModel = require('../models/user');
-const { userExists, getUserById, getUserByUsername } = require('../middlewares/userService');
-const { verifyToken, generateToken } = require('../middlewares/auth');
+const BookModel = require('../models/book');
+const { userExists, getUserByUsername } = require('../middlewares/userService');
+const { verifyToken, generateToken } = require('../middlewares/authService');
 const { uploadImages, setStorageDirectory, setFileName } = require('../middlewares/fileService');
 
 setStorageDirectory('./public/images/user');
@@ -68,14 +69,15 @@ router.post('/usernameAvailable', userExists, async (req, res) => {
 });
 
 router.use(verifyToken);
+router.use(getUserByUsername);
 
 router.route('/')
-    .get(getUserByUsername, (req, res) => {
+    .get((req, res) => {
         req.user.avatar = req.protocol + "://" + req.hostname + ':3000/public/images/user/' + req.user.avatar;
         req.password = '';
         res.json(req.user);
     })
-    .patch(getUserByUsername, uploadImages.single('file'), async (req, res) => {
+    .patch(uploadImages.single('file'), async (req, res) => {
         const user = req.user;
 
         const fieldsToUpdate = req.body;
@@ -94,28 +96,84 @@ router.route('/')
             res.status(400).json({ message: error.message })
         }
     })
-    .delete(getUserByUsername, async (req, res) => {
+    .delete(async (req, res) => {
         try {
             const user = req.user;
             await user.deleteOne();
             res.send("Deleted user with username: " + user.username);
         } catch (error) {
-            res.status(400).json({ message: error.message })
+            res.status(400).json({ message: error.message });
         }
     });
 
-router.route('/:id')
-    .get(getUserById, (req, res) => {
-        res.json(req.user);
-    })
-    .delete(getUserById, async (req, res) => {
-        try {
-            const user = req.user;
-            await user.deleteOne();
-            res.send("Deleted user with username: " + user.username);
-        } catch (error) {
-            res.status(400).json({ message: error.message })
+router.post('/addFavorite', async (req, res) => {
+    try {
+        const user = req.user;
+        const book = await BookModel.findById(req.body.bookId);
+        if (!book)
+            res.status(404).json({ message: 'Book not found' });
+
+        if (user.favorite.indexOf(req.body.bookId) === -1)
+            user.favorite.push(req.body.bookId);
+
+        user.save();
+
+        res.status(200).json({ message: 'Added to favorite' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.post('/removeFavorite', async (req, res) => {
+    try {
+        const user = req.user;
+        if (user.favorite.length < 1 || user.favorite.indexOf(req.body.bookId) === -1) {
+            res.status(400).json({ message: 'Book has not been added to favorite' });
+            return;
         }
-    });
+
+        user.favorite.splice(user.favorite.indexOf(req.body.bookId), 1);
+        user.save();
+
+        res.status(200).json({ message: 'Removed from favorite' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.post('/isFavorite', async (req, res) => {
+    try {
+        const user = req.user;
+        if (!user.favorite || user.favorite.indexOf(req.body.bookId) === -1)
+            res.send(false);
+
+        res.send(true);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+router.get('/favorite', async (req, res) => {
+    try {
+        const user = req.user;
+        res.status(200).json(user.favorite);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// router.route('/:id')
+//     .get(getUserById, (req, res) => {
+//         res.json(req.user);
+//     })
+//     .delete(getUserById, async (req, res) => {
+//         try {
+//             const user = req.user;
+//             await user.deleteOne();
+//             res.send("Deleted user with username: " + user.username);
+//         } catch (error) {
+//             res.status(400).json({ message: error.message })
+//         }
+//     });
 
 module.exports = router;

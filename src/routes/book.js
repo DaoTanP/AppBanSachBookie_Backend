@@ -7,19 +7,29 @@ router.route('/')
         try {
             const title = req.query.title;
             const category = (typeof req.query.category === 'string') ? [req.query.category] : req.query.category;
-            const author = req.query.author;
+            const author = (typeof req.query.author === 'string') ? [req.query.author] : req.query.author;
+            const publisher = (typeof req.query.publisher === 'string') ? [req.query.publisher] : req.query.publisher;
+            const publishedFrom = req.query.publishedFrom;
+            const publishedTo = req.query.publishedTo;
             let query = {};
             if (title)
-                query.title = new RegExp(title, 'i');
+                query.title = { $in: title.map(q => new RegExp(q, 'i')) };
             if (category)
-                query.category = { $in: category.map(c => new RegExp(c, 'i')) };
+                query.category = { $in: category.map(q => new RegExp(q, 'i')) };
             if (author)
-                query.author = new RegExp(author, 'i');
+                query.author = { $in: author.map(q => new RegExp(q, 'i')) };
+            if (publisher)
+                query.publisher = { $in: publisher.map(q => new RegExp(q, 'i')) };
+            if (publishedFrom || publishedTo)
+                query.publishDate = { $gte: (publishedFrom || 1000) + '-01-01', $lte: (publishedTo || new Date().getFullYear()) + '-12-31' };
 
             if (Object.keys(query).length === 0)
                 query = undefined;
 
-            const results = await BookModel.find(query).sort();
+            const results = await BookModel.find(query).sort().select({ __v: 0 });
+            results.forEach(book => {
+                book.images = book.images.map(image => req.protocol + "://" + req.hostname + ':3000/public/images/book/' + image);
+            });
             res.json(results);
         } catch (e) {
             res.status(500).send({ message: e.message });
@@ -34,7 +44,8 @@ router.route('/')
             publishDate: req.body.publishDate,
             overview: req.body.overview,
             numberOfPages: req.body.numberOfPages,
-            images: req.body.images
+            images: req.body.images,
+            price: req.body.price,
         });
         try {
             const newBook = await book.save();

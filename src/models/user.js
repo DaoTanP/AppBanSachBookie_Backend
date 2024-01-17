@@ -31,9 +31,14 @@ const userSchema = new mongoose.Schema({
     avatar: {
         type: String
     },
-    role: {
-        type: String,
-        required: true
+    favorite: {
+        type: [String]
+    },
+    cart: {
+        type: [String]
+    },
+    order: {
+        type: [String]
     }
 });
 

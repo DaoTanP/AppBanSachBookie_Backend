@@ -15,9 +15,8 @@ async function userExists(req, res, next) {
 }
 
 async function getUserById(req, res, next) {
-    let user;
     try {
-        user = await UserModel.findById(req.params.id || req.body.id || req.id);
+        const user = await UserModel.findById(req.params.id || req.body.id || req.id);
         if (!user)
             return res.status(404).json({ message: 'user not found!' });
 

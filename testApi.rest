@@ -10,12 +10,12 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3000/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDQ3MjQ2NTQsImV4cCI6MTcwNDcyODI1NH0.rIZNriX0RD5XrP91DO6jwkB5DfjbdPo9QCb274xpHdQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MTYzMzksImV4cCI6MTcwNTQxOTkzOX0.2E9enNQmxX6mAyJCkLU8ro400Jdw-rAkKNnfTAfvcRY
 
 ###
 
 PATCH http://localhost:3000/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDQ3MjM4MTMsImV4cCI6MTcwNDcyNzQxM30.b5eGMKAT7SADaNK93gTlze1PEEaYfRVX48DXSpj4Ejg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MDIxNjEsImV4cCI6MTcwNTQwNTc2MX0.sW_k3NZnq5OoIlXqTL7fN66INU-QFQj3mYV90hJUnFU
 Content-Type: application/json
 
 {
@@ -32,4 +32,41 @@ GET http://localhost:3000/book/category
 
 ###
 
-GET http://localhost:3000/book?category=c6&category=c1
+GET http://localhost:3000/book?publishedFrom=2000&publishedTo=2001
+
+###
+
+GET http://localhost:3000/user/favorite
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MTYzMzksImV4cCI6MTcwNTQxOTkzOX0.2E9enNQmxX6mAyJCkLU8ro400Jdw-rAkKNnfTAfvcRY
+
+###
+
+POST http://localhost:3000/user/addFavorite
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MTYzMzksImV4cCI6MTcwNTQxOTkzOX0.2E9enNQmxX6mAyJCkLU8ro400Jdw-rAkKNnfTAfvcRY
+Content-Type: application/json
+
+{
+    "bookId": "65805a7d3ace346128de5052"
+}
+
+###
+
+POST http://localhost:3000/user/removeFavorite
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MTYzMzksImV4cCI6MTcwNTQxOTkzOX0.2E9enNQmxX6mAyJCkLU8ro400Jdw-rAkKNnfTAfvcRY
+Content-Type: application/json
+
+{
+    "bookId": "65805a7d3ace346128de5052"
+}
+
+###
+
+POST http://localhost:3000/order
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhb3RhbnAiLCJpYXQiOjE3MDU0MjA0MjIsImV4cCI6MTcwNTQyNDAyMn0.MpDhFmL9KVcFw0MmN-4rL4i1r_ebUKI2xLD0S2-8Y4k
+Content-Type: application/json
+
+{
+    "productId": [
+        "65a6999b0047deb0d606d0fc"
+    ]
+}

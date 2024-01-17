@@ -22,6 +22,8 @@ const bookRouter = require('./src/routes/book');
 app.use('/book', bookRouter);
 const userRouter = require('./src/routes/user');
 app.use('/user', userRouter);
+const orderRouter = require('./src/routes/order');
+app.use('/order', orderRouter);
 
 app.get('/', (req, res) => {
     res.send('API for Bookie');

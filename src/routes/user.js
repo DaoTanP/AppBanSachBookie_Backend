@@ -40,7 +40,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/register', userExists, async (req, res) => {
-    if (userExists) {
+    if (req.userExists) {
         res.status(400).json({ message: "Account with username " + req.body.username + " already exists" });
         return;
     }

@@ -65,7 +65,12 @@ router.post('/register', userExists, async (req, res) => {
 });
 
 router.post('/usernameAvailable', userExists, async (req, res) => {
-    res.status(200).json({ message: 'Username ' + req.body.username + 'is available' });
+    if (req.userExists) {
+        res.status(400).json({ message: 'Username ' + req.body.username + ' already exists' });
+        return;
+    }
+
+    res.status(200).json({ message: 'Username ' + req.body.username + ' is available' });
 });
 
 router.use(verifyToken);

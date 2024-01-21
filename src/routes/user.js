@@ -40,6 +40,11 @@ router.post('/login', async (req, res) => {
 });
 
 router.post('/register', userExists, async (req, res) => {
+    if (userExists) {
+        res.status(400).json({ message: "Account with username " + req.body.username + " already exists" });
+        return;
+    }
+
     const user = new UserModel({
         username: req.body.username,
         password: req.body.password,

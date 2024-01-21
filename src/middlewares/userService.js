@@ -2,10 +2,11 @@ const UserModel = require('../models/user');
 
 async function userExists(req, res, next) {
     try {
+        req.userExists = false;
         const result = await UserModel.exists({ username: req.body.username });
 
         if (result)
-            res.status(400).json({ message: 'Username ' + req.body.username + ' already exists' });
+            req.userExists = true;
 
         next();
     } catch (e) {
